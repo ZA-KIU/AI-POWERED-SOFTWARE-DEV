@@ -95,7 +95,7 @@ All deliverables must be in your team GitHub repository under `docs/`:
 - [ ] **Technical Decisions Log:** Why you chose X over Y
 - [ ] **Open Questions:** What you're still uncertain about
 
-📄 **Template:** [Refined Proposal Template](./templates/refined-proposal-template.md)
+📄 **Template:** [Refined Proposal Template]
 
 ---
 
@@ -117,8 +117,8 @@ All deliverables must be in your team GitHub repository under `docs/`:
 - [ ] **Future Roadmap:** Additional features for post-course development
 - [ ] **Feature Justification:** Why each MVP feature was prioritized
 
-📄 **Template:** [Feature Roadmap Template](./templates/feature-roadmap-template.md)  
-🤖 **AI Prompt:** [20-Pillar Design System Prompt](./guides/ai-design-framework-prompts.md#20-pillar-system)
+📄 **Template:** [Feature Roadmap Template]
+🤖 **AI Prompt:** [20-Pillar Design System Prompt]
 
 ---
 
@@ -139,8 +139,8 @@ Your architecture diagram must show:
 - Highlight what changed from original proposal and why
 - Use different colors or annotations to show evolution
 
-📄 **Template:** [Architecture Diagram Template](./templates/architecture-diagram-template.md)  
-📄 **Guide:** [Architecture Best Practices](./guides/architecture-design-guide.md)
+📄 **Template:** [Architecture Diagram Template]
+📄 **Guide:** [Architecture Best Practices]
 
 **Accompanying Document (`docs/architecture-explanation.md`):**
 - Explain each component's purpose
@@ -182,8 +182,8 @@ Your architecture diagram must show:
 - Test data management strategy
 - User feedback collection methods
 
-📄 **Template:** [Evaluation Plan Template](./templates/evaluation-plan-template.md)  
-🤖 **AI Prompt:** [Evaluation Strategy Generator](./guides/ai-design-framework-prompts.md#evaluation-strategy)
+📄 **Template:** [Evaluation Plan Template] 
+🤖 **AI Prompt:** [Evaluation Strategy Generator]
 
 ---
 
@@ -238,8 +238,8 @@ Emergency/Overflow:               $20
 Total Semester Budget:            $200
 ```
 
-📄 **Template:** [Cost Model Template](./templates/cost-model-template.md)  
-📄 **Guide:** [Token Optimization Strategies](./guides/token-optimization-guide.md)
+📄 **Template:** [Cost Model Template]
+📄 **Guide:** [Token Optimization Strategies]
 
 ---
 
@@ -311,8 +311,7 @@ answers are accurate and cited.
 ```
 
 📄 **Template:** [Backlog Template](./templates/backlog-template.md)  
-🤖 **AI Prompt:** [Feature Prioritization Framework](./guides/ai-design-framework-prompts.md#feature-prioritization)
-
+🤖 **AI Prompt:** [Feature Prioritization Framework]
 ---
 
 #### **7. Team Health Check (`docs/team-health-week4.md`)** 🤝
@@ -341,7 +340,7 @@ answers are accurate and cited.
 - Backup plans for key risks
 - Escalation paths if problems arise
 
-📄 **Template:** [Team Health Check Template](./templates/team-health-template.md)
+📄 **Template:** [Team Health Check Template]
 
 ---
 
@@ -357,7 +356,7 @@ answers are accurate and cited.
 
 1. **Open your AI assistant** (Claude, ChatGPT, etc.)
 
-2. **Paste the 20-Pillar Design System prompt** (see [AI Prompts Guide](./guides/ai-design-framework-prompts.md))
+2. **Paste the 20-Pillar Design System prompt** (see [AI Prompts Guide]
 
 3. **Input your refined capstone idea:**
    ```
