@@ -13,7 +13,6 @@ This lab serves a **triple purpose**: (1) refining and tightening your Week 2 ca
 
 **Where You Are Now:**
 - ✅ Week 2: Submitted capstone proposal (possibly rushed, conceptual)
-- ✅ Week 3: Built your first working prototype (learned what's actually hard)
 - ✅ Week 3 Lecture: Covered image generation and content filtering
 - 📍 **Week 4 (NOW)**: Time to consolidate learnings and refine your foundation
 
