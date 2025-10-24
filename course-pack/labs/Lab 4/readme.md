@@ -828,7 +828,6 @@ A: Only with instructor approval. Small pivots are fine, complete project change
 ### **Examples** (All in `/examples/`)
 - [Example Refined Proposal](./examples/example-refined-proposal.md)
 - [Example Feature Roadmap](./examples/example-feature-roadmap.md)
-- [Example Architecture Diagram](./examples/example-architecture-diagram.png)
 
 
 ### **External Resources**
