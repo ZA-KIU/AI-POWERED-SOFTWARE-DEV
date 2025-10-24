@@ -829,7 +829,7 @@ A: Only with instructor approval. Small pivots are fine, complete project change
 - [Example Refined Proposal](./examples/example-refined-proposal.md)
 - [Example Feature Roadmap](./examples/example-feature-roadmap.md)
 - [Example Architecture Diagram](./examples/example-architecture-diagram.png)
-- [Example Evaluation Plan](./examples/example-evaluation-plan.md)
+
 
 ### **External Resources**
 - OpenAI Token Optimization: https://platform.openai.com/docs/guides/optimization
