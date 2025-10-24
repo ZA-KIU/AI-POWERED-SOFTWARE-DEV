@@ -61,6 +61,20 @@ By the end of this lab, you will:
 
 ## 📋 What's Due This Week
 
+All due end of Week 4 in team GitHub repo (`docs/` folder):
+
+| # | File Name | Template/Guide | AI Prompt Used |
+| :--- | :--- | :--- | :--- |
+| 1 | `capstone-proposal-v2.md` | `templates/refined-proposal-template.md` | #5 Risk Assessment |
+| 2 | `feature-roadmap.md` | Use AI prompts directly | #1 20-Pillar + #2 Prioritization |
+| 3 | `architecture-v2.md` + diagram | README Section 4 | #3 Architecture Gap |
+| 4 | `evaluation-plan-v2.md` | README Section 5 | #4 Evaluation + #7 User Testing |
+| 5 | `cost-model-v2.md` | README Section 6 | #6 Token Optimization |
+| 6 | `backlog-v2.md` | README Section 7 | #2 Prioritization |
+| 7 | `team-health-week4.md` | README Section 8 | `N/A` |
+
+**Grading:** 5 points total (Design Review Milestone)
+
 ### **Milestone 2: Design Review Submission (5 points)**
 
 All deliverables must be in your team GitHub repository under `docs/`:
