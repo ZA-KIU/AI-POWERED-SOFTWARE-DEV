@@ -1,0 +1,194 @@
+# Prioritized Backlog (Version 2)
+
+**Project Name:** [Your Project Name]  
+**Last Updated:** Week 4, [Date]  
+**Sprint:** Week [X] of 15
+
+---
+
+## 📋 Backlog Overview
+
+**Total Issues:** [XX]  
+**P1 (Must Have):** [X] issues  
+**P2 (Should Have):** [X] issues  
+**P3 (Nice to Have):** [X] issues  
+**Completed:** [X] issues  
+
+**Current Sprint Focus:** [Brief description of what team is working on this week]
+
+---
+
+## 🔴 Priority 1: Critical Path (Must Have for MVP)
+
+These features are non-negotiable for Week 15 demo. If we don't build these, we don't have a viable product.
+
+### Issue #1: [Feature Name]
+
+**Status:** 🟡 In Progress / 🔵 To Do / ✅ Done  
+**Assigned:** [Team Member Name]  
+**Due:** Week [X]  
+**Effort:** Small (2-4 hrs) / Medium (4-8 hrs) / Large (8+ hrs)
+
+**User Story:**
+> As a [type of user], I want to [action] so that [benefit].
+
+**Why This Is P1:**
+[1-2 sentences explaining why this is critical for MVP]
+
+**Acceptance Criteria:**
+- [ ] [Specific, testable criterion 1]
+- [ ] [Specific, testable criterion 2]
+- [ ] [Specific, testable criterion 3]
+
+**Technical Requirements:**
+- [Technical detail 1]
+- [Technical detail 2]
+- [Dependencies or constraints]
+
+**Definition of Done:**
+- [ ] Code written and committed
+- [ ] Unit tests pass (>80% coverage)
+- [ ] Integration test validates end-to-end flow
+- [ ] Code reviewed by team member
+- [ ] Documentation updated (if needed)
+- [ ] Deployed to staging
+- [ ] Tested on staging environment
+
+**Dependencies:**
+- **Blocks:** Issue #[XX] (can't start until this is done)
+- **Blocked By:** Issue #[XX] (need this first)
+
+**Resources:**
+- [Link to relevant documentation]
+- [Link to similar implementation]
+- [Tutorial or guide]
+
+---
+
+[Repeat for all P1 issues]
+
+---
+
+## 🟡 Priority 2: Enhanced Features (Should Have)
+
+Features we'll build if time permits, in priority order. If we finish P1 early, we start on these.
+
+### Issue #X: [Feature Name]
+
+[Same structure as P1]
+
+---
+
+## 🟢 Priority 3: Nice-to-Have (Could Have)
+
+Features deferred to post-course or only if we're significantly ahead of schedule.
+
+### Issue #X: [Feature Name]
+
+[Lighter structure - just title, brief description, and why it's P3]
+
+---
+
+## ⏸️ Backlog (Not Prioritized Yet)
+
+Features and ideas that need more discussion before prioritizing.
+
+- [ ] **[Feature Name]:** [Brief description]
+- [ ] **[Feature Name]:** [Brief description]
+
+---
+
+## 🚫 Rejected / Cut Features
+
+Features we decided not to build, with rationale.
+
+- **[Feature Name]:** Cut because [reason]
+- **[Feature Name]:** Cut because [reason]
+
+---
+
+## 📅 Sprint Timeline
+
+### Week 4 (Current)
+- [ ] Issue #1: [Name]
+- [ ] Issue #2: [Name]
+- [ ] Issue #3: [Name]
+
+### Week 5
+- [ ] Issue #4: [Name]
+- [ ] Issue #5: [Name]
+
+### Week 6
+- [ ] Issue #6: [Name]
+
+[Continue through Week 15]
+
+---
+
+**Example Complete Issue:**
+
+### Issue #12: Implement RAG with FAISS Vector Store
+
+**Status:** 🔵 To Do  
+**Assigned:** Alice Johnson  
+**Due:** Week 5  
+**Effort:** Large (12 hours)
+
+**User Story:**
+> As a user, I want relevant context retrieved from my documents so that answers are accurate and cite sources.
+
+**Why This Is P1:**
+RAG is our core differentiator. Without it, we're just another chatbot. This enables our unique value proposition of document-grounded responses.
+
+**Acceptance Criteria:**
+- [ ] FAISS index created with 100+ document chunks
+- [ ] Vector search returns top-5 results in <300ms
+- [ ] Retrieved context successfully injected into prompt
+- [ ] Citations displayed in user-facing response
+- [ ] Handles queries with no relevant context gracefully (doesn't hallucinate)
+
+**Technical Requirements:**
+- Use LangChain's FAISS integration
+- Chunking strategy: 500 tokens per chunk, 50 token overlap
+- Embedding model: text-embedding-3-small (cheaper, sufficient quality)
+- Store FAISS index locally (migrate to hosted solution if needed later)
+
+**Definition of Done:**
+- [ ] Code committed to `feature/rag-implementation` branch
+- [ ] Unit tests for vector search functions (>80% coverage)
+- [ ] Integration test: query → retrieve → inject → respond
+- [ ] Latency benchmark: <300ms for vector search
+- [ ] Code review completed by Bob
+- [ ] Merged to main
+- [ ] Deployed to staging
+- [ ] Documentation: `/docs/rag-architecture.md` updated
+
+**Dependencies:**
+- **Blocks:** Issue #18 (User Testing Round 1 - needs working RAG)
+- **Blocked By:** Issue #10 (Document ingestion pipeline - need docs in system first)
+
+**Resources:**
+- LangChain FAISS tutorial: https://python.langchain.com/docs/integrations/vectorstores/faiss
+- FAISS documentation: https://github.com/facebookresearch/faiss/wiki
+- Our architecture doc: `/docs/architecture-v2.md`
+
+**Subtasks:**
+1. [ ] Install dependencies (FAISS, LangChain)
+2. [ ] Implement document chunking logic
+3. [ ] Generate embeddings for all chunks
+4. [ ] Create FAISS index
+5. [ ] Implement vector search function
+6. [ ] Integrate search results into prompt
+7. [ ] Add citation extraction logic
+8. [ ] Write unit tests
+9. [ ] Write integration test
+10. [ ] Performance benchmark
+11. [ ] Documentation
+12. [ ] Code review
+
+**Notes:**
+- Alice explored both FAISS and Pinecone. FAISS chosen for cost (free) and simplicity (local).
+- May need to revisit if scale >10K documents, but sufficient for MVP.
+- Discussed in team meeting 10/15: consensus on approach.
+
+---
