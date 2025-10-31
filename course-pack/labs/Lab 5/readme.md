@@ -149,6 +149,18 @@ npm install
 python app.py
 ```
 
+Once you have your FINAL PRD you will be pasting it into LOVABLE to get your MVP Up and Running
+## 🚀 Lovable Account Setup
+
+The designated team lead must set up the team's Lovable account using the provided discount code.
+
+1.  Go to [https://lovable.dev](https://lovable.dev)
+2.  Click **Log In** &rarr; **Create your account** (if you don’t already have one).
+3.  Once logged in, navigate to **Settings** &rarr; **Plans & Billing**.
+4.  Select **Pro Plan 1** (100 credits, value $25) YOU WILL USE THE CODE **KIUEDU** to GET 100 CREDITS / 1 MONTH FREE
+5.  At checkout, enter your discount code to apply the credit.
+YOU NEED TO ADD BILLING DETAILS BUT YOU WILL NOT BE CHARGED FOR THE FIRST MONTH
+***MAKE SURE YOU CANCEL YOUR ACCOUNT BY MONTHS END OR YOU WILL BE CHARGED $25***
 ---
 
 ## 🔍 Part 2: RAG Strategy Design (30 minutes)
