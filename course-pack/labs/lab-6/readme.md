@@ -318,7 +318,7 @@ See [Homework Assignment](./homework-assignment.md) for complete requirements.
 2. **Pydantic models** for all function inputs/outputs  
 3. **Test cases** showing functions work
 4. **GitHub commit** with visible progress
-5. **Short demo video** (2-3 min) showing it working
+5. **Short demo video** (2-3 min) showing it working uploaded to youtube and share link
 
 **Grading:**
 - 40% - Functions are implemented and working
