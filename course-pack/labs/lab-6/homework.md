@@ -5,7 +5,7 @@
 Implement function calling and structured outputs into your capstone project. This is a **project milestone**—your AI must be able to take real actions by Friday.
 
 **Points:** 10 (Project milestone)  
-**Due:** Friday, Week 6, 11:59 p.m.  
+**Due:** Friday, Friday November 13th 23:59  
 **Submission:** GitHub repo URL + demo video link
 
 ---
