@@ -20,6 +20,8 @@ By the end of Week 6, your capstone must have:
 - ✅ Error handling for function failures
 - ✅ Code committed to GitHub
 
+Make sure you define your MVP. Keep in mind your MVP is different then your PRD then your MVP. You can use the mvp-efinition-template.md and feature-prioritization-template.md if you are getting stuck on what features to build in the next 3 sprints
+
 ---
 
 ## 📦 Required Deliverables
