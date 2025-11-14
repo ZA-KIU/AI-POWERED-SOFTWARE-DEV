@@ -1,175 +1,145 @@
-LAB 7: DESIGN REVIEW & TECHNICAL VALIDATION
-Complete Package for AI-Powered Software Development Course
+# Lab 7: Design Review & Technical Validation
 
-=============================================================================
-CONTENTS
-=============================================================================
+**Building AI-Powered Applications | Week 7**
 
-This archive contains all materials for Week 7 Lab - the critical validation
-checkpoint before Week 8 agent orchestration.
+## Critical Checkpoint: Before You Build Agent Loops
 
-TOTAL: 11 files organized in clear structure
+This lab is a **required validation checkpoint** before Week 8's agent orchestration. You've spent Weeks 3-6 building foundational capabilities (basic LLM integration, multimodal I/O, RAG, function calling). Now you must **prove your foundation is solid** before adding the complexity of multi-step agent workflows.
 
-=============================================================================
-FILE STRUCTURE
-=============================================================================
+**Why This Matters:** Agent orchestration (Week 8) will amplify any existing issues by 5-20x. A small latency problem becomes a cascade. A vague data schema becomes chaos. This lab gates you from proceeding until you've validated your architecture works.
 
-lab-7/
-├── README.md                           # Lab overview (STUDENTS READ FIRST)
-├── homework-assignment.md              # Submission requirements (10 pages)
-│
-├── templates/                          # Students copy these
-│   ├── design-review-template.md      # Main deliverable (8 pages)
-│   ├── event-schema-template.md       # JSON schemas (10 pages)
-│   └── smoke-test-checklist.md        # Validation tests (6 pages)
-│
-└── guides/                             # Students learn from these
-    ├── event-schema-guide.md          # Schema design (4 pages)
-    ├── performance-baseline-guide.md   # Performance measurement (5 pages)
-    └── hypothesis-validation-guide.md  # Testing assumptions (6 pages)
+---
 
-=============================================================================
-QUICK START
-=============================================================================
+## Lab Objectives
 
-1. EXTRACT THE ARCHIVE
-   
-   On Mac/Linux:
-   $ tar -xzf lab-7-complete.tar.gz
-   
-   On Windows:
-   - Right-click lab-7-complete.tar.gz
-   - Extract with 7-Zip or WinRAR
-   
-   This creates a "lab-7" folder with all materials.
+By the end of this 2-hour lab session, you will:
 
-2. FOR INSTRUCTORS
-   
-   a) Read instructor-script.md FIRST (18 pages, worth it!)
-   b) Review student GitHub repos before lab
-   c) Follow script minute-by-minute during lab
-   d) Grade using rubric.md after lab
-   
-3. FOR STUDENTS
-   
-   a) Read README.md to understand the lab
-   b) Review homework-assignment.md for requirements
-   c) Copy templates/ to your project docs/ folder
-   d) Follow guides/ when building your deliverable
+1. **Demonstrate a working prototype** - Not slides or promises, actual running code from Weeks 3-6
+2. **Document event schemas** - Precise JSON contracts for all system interactions
+3. **Execute smoke tests** - Prove end-to-end data flow works reliably
+4. **Validate one hypothesis** - Use real data to test a core design assumption
+5. **Assess readiness** - Determine if your architecture can handle agent complexity
 
-=============================================================================
-KEY CONCEPTS
-=============================================================================
+---
 
-This lab is a FORCING FUNCTION that:
-   ✓ Validates students have working code (not just proposals)
-   ✓ Documents event schemas (prevents debugging nightmares)
-   ✓ Executes smoke tests (proves functionality)
-   ✓ Measures performance (establishes baselines)
-   ✓ Tests hypotheses (validates assumptions with data)
-   ✓ Assesses readiness (honest evaluation before complexity)
+## What's Due (Week 7 Homework)
 
-WHY IT MATTERS:
-   - Agent loops (Week 8) amplify problems 5-20x
-   - Better to find issues now while system is simple
-   - Catches red flags before students waste weeks
+**Deliverable:** Design Review Document (5 points toward Capstone)
 
-GRADING PHILOSOPHY:
-   - Rewards honesty over perfection
-   - Requires evidence over claims
-   - Values documentation quality
-   - Partial credit available for good faith effort
+**Submission:** Updated GitHub repository with `docs/design-review-week7.md`
 
-=============================================================================
-WHAT STUDENTS SUBMIT
-=============================================================================
+**Due:** End of Week 7
 
-Main deliverable: docs/design-review-week7.md containing:
+See [Homework Assignment](./homework-assignment.md) for complete requirements.
 
-   1. Architecture Validation (1-2 pages)
-      - Updated architecture diagram
-      - Component descriptions
-      - Changes from Week 2 proposal
-   
-   2. Event Schema Documentation (2-3 pages)
-      - JSON schemas for all events
-      - Example instances
-      - Validation rules
-   
-   3. Smoke Test Results (1-2 pages)
-      - Pass/fail for each test
-      - Evidence (logs, screenshots)
-      - Mitigation plans for failures
-   
-   4. Performance Baseline (1 page)
-      - Latency measurements (p50, p95, p99)
-      - Token usage analysis
-      - Cost calculations
-   
-   5. Hypothesis Validation (1-2 pages)
-      - One tested assumption
-      - Methodology and results
-      - Implications for Week 8
-   
-   6. Readiness Assessment (1 page)
-      - Can system handle agent complexity?
-      - What must be fixed?
-      - Action plan with deadlines
+---
 
-GRADING: 5 points (out of 25 total Capstone points)
+## Lab Format (2 Hours)
 
-=============================================================================
-LAB SESSION STRUCTURE
-=============================================================================
+### Part 1: Team Demonstrations (30 min)
+- 3-5 teams present 5-minute working demos
+- Instructor validates: "Show me it working right now"
+- Peer feedback on architecture choices
 
-Total time: 2 hours
+### Part 2: Event Schema Workshop (45 min)
+- Define JSON schemas for all key system events
+- Document data contracts between components
+- Validate schema completeness
 
-   0:00-0:05  | Introduction & Expectations
-   0:05-0:35  | Team Demonstrations (5 min each)
-   0:35-1:20  | Event Schema Workshop
-   1:20-1:50  | Smoke Test Execution
-   1:50-2:00  | Wrap-up & Readiness Assessment
+### Part 3: Smoke Test Execution (30 min)
+- Run through validation checklist as a team
+- Collect performance baseline measurements
+- Document results and gaps
 
-CRITICAL: Instructor validates actual working demos, not slides.
+### Part 4: Hypothesis Validation & Refinement (15 min)
+- Review one tested design assumption with data
+- Identify architecture changes needed before Week 8
+- Plan Week 8 readiness tasks
 
-=============================================================================
-SUCCESS METRICS
-=============================================================================
+---
 
-This lab succeeds if:
-   ✓ Every team attempts a working demo
-   ✓ Students document event schemas precisely
-   ✓ Smoke tests reveal issues (that's GOOD!)
-   ✓ Teams know what to fix before Week 8
-   ✓ Instructor catches red flags early
+## Prerequisites (Complete BEFORE Lab)
 
-This lab fails if:
-   ✗ Students fake demos without running code
-   ✗ No honest assessment of gaps
-   ✗ Teams leave not knowing readiness
-   ✗ Problems hidden until Week 10
+You must bring to lab:
 
-=============================================================================
+### 1. Working Prototype
+- **Functional code** from Weeks 3-6 that runs on your laptop
+- Not broken, not "almost working" - actually working
+- Can demonstrate core functionality live
 
-=============================================================================
-VERSION
-=============================================================================
+### 2. Test Data Ready
+- Sample inputs prepared (text, images, audio as applicable)
+- API keys loaded and validated
+- Database populated with test data (if using RAG)
 
-Created: November 2025
-For: Building AI-Powered Applications (CS-AI-2025)
-Course: Week 7 - Design Review & Technical Validation
-Instructor: Professor Zeshan Ahmad
-Institution: Kutaisi International University
+### 3. Logs Collected
+- At least 10 example requests with full request/response logs
+- Error examples if you have them
+- Performance measurements (latency, tokens, cost)
 
-=============================================================================
+### 4. Initial Event Schemas Drafted
+- Start the `docs/event-schemas.md` file
+- Draft schemas for your 3-5 most critical events
+- Bring questions about schema design
 
-Questions? Issues? Improvements?
+---
 
-This is production-tested material. Use it, adapt it, improve it.
+## Success Criteria
 
-Your students will thank you when Week 8 "just works" because they
-validated their foundations properly in Week 7.
+You're ready for Week 8 if you can answer "YES" to all:
 
-Good luck with the lab!
+- ✅ Can you demo your app working end-to-end right now?
+- ✅ Do you have documented JSON schemas for all key events?
+- ✅ Can you show logs from at least 10 successful requests?
+- ✅ Do you know your baseline latency and cost per request?
+- ✅ Have you validated at least one design assumption with data?
+- ✅ Have you identified and planned fixes for critical gaps?
 
-=============================================================================
+If any answer is "NO" - that's what this lab helps you fix.
+
+---
+
+## Files & Templates
+
+**Templates (Copy These):**
+- [Design Review Template](./templates/design-review-template.md) - Main deliverable structure
+- [Event Schema Template](./templates/event-schema-template.md) - JSON schema format
+- [Smoke Test Checklist](./templates/smoke-test-checklist.md) - Validation checklist
+
+**Guides (Read These):**
+- [Event Schema Guide](./guides/event-schema-guide.md) - How to define robust schemas
+- [Performance Baseline Guide](./guides/performance-baseline-guide.md) - How to measure correctly
+- [Hypothesis Validation Guide](./guides/hypothesis-validation-guide.md) - How to test assumptions
+
+**Grading:**
+- [Rubric](./rubric.md) - How the 5-point Design Review is graded
+
+---
+
+## Common Questions
+
+### "Our app isn't finished yet, can we skip this?"
+
+**No.** This lab doesn't require a finished app - it requires a **working foundation**. Even if you only have basic LLM integration working, that's enough to validate schemas and performance.
+
+### "We don't have RAG/functions implemented yet"
+
+**That's fine.** Document the schemas you *will* use, run smoke tests on what you *do* have, and identify what needs to be built.
+
+### "Can we do the smoke test at home?"
+
+**No.** The lab is structured so the instructor can help you debug issues live. Having help available is critical.
+
+### "What if we fail the smoke test?"
+
+**That's actually good.** Better to discover issues now than after building complex agent loops on top.
+
+---
+
+## Final Reminder
+
+**This lab is a forcing function.** It intentionally creates pressure to validate your work before adding complexity. That pressure is productive - it catches problems early when they're easy to fix.
+
+Don't skip the prep work. Don't fake the demo. Don't skip the smoke test.
+
+**You've got this.**
