@@ -1,908 +1,416 @@
-# Lab 8: Building Production-Ready Agents
+# Lab 8: Production Optimization Workshop
 
 **Week 10 | Building AI-Powered Applications**
 
-Welcome back from midterm! This lab applies Week 8's concepts on agents and orchestration to your capstone projects. You'll build production-ready agents with proper failure handling, safety policies, and cost controls.
+Welcome back from midterm! This lab shifts focus to making your capstone production-ready. You'll apply cost optimization, caching strategies, and performance improvements that can reduce operational costs by 80%+ while maintaining or improving quality.
 
 **Lab Duration:** 2 hours in-class + homework integration into capstone  
-**Prerequisites:** Completed Labs 6-7 (function calling, streaming), understanding of Week 8 lecture content
-
----
+**Prerequisites:** Working capstone with API integration (from Labs 6-7)
 
 ## Learning Objectives
 
 By the end of this lab, you will:
 
-- Implement a ReAct agent loop for your capstone project
-- Add timeouts and retry logic with exponential backoff
-- Implement authorization checks for tool functions
-- Set up comprehensive audit logging for all agent actions
-- Add cost tracking and budget limits to prevent runaway expenses
-- Build graceful degradation patterns for agent failures
-
----
+- Audit your capstone's current cost and latency patterns
+- Implement prompt caching to reduce repeat costs by 60-90%
+- Apply smart model selection to achieve 5-10x cost reductions
+- Add batching for batch-processable tasks
+- Implement cost tracking and alerting systems
+- Document optimization decisions with before/after metrics
 
 ## What's Due This Week
 
-### In-Lab Deliverable: Agent Implementation Plan
+### In-Lab Deliverable: Optimization Audit Report
 
-Document in your capstone repository at `docs/agent-implementation-plan.md`:
+Document in your capstone repository at `docs/optimization-audit.md`:
 
-1. **Agent Design** - Which part of your capstone benefits from agent behavior?
-2. **Tool Inventory** - List of tools your agent will use
-3. **Safety Requirements** - Authorization, validation, and limits needed
-4. **Failure Scenarios** - What can go wrong and how you'll handle it
+1. **Current State Analysis** - Baseline costs, latency, usage patterns
+2. **Optimization Opportunities** - Identified improvements with projected impact
+3. **Implementation Plan** - What you'll optimize, timeline, success metrics
+4. **Cost Calculator** - Tool or spreadsheet showing cost projections
 
-**Due:** End of lab session (submit link to your plan document)
+**Due:** End of lab session (submit link to your audit document)
 
-### Homework: Implement Production Agent
+### Homework: Implement Top 3 Optimizations
 
-By end of Week 10, implement a production-ready agent for your capstone:
+By end of Week 10, implement your top 3 optimization opportunities:
 
-1. ReAct loop with max iterations
-2. Timeouts on all API calls and tool executions
-3. Retry logic with exponential backoff
-4. Authorization checks on tools
-5. Comprehensive audit logging
-6. Cost tracking and limits
+1. Update code with caching, model selection, or batching
+2. Add cost tracking instrumentation
+3. Document results in `docs/optimization-results.md`
+4. Update your project README with new performance metrics
 
 **Due:** End of Week 10 (see course calendar)  
-**Points:** Part of Capstone ongoing development (contributes to Milestone 3 - Safety Audit)
-
----
+**Points:** Part of Capstone ongoing development
 
 ## Why This Matters
 
-**Real-world context:** A buggy agent without proper safeguards can:
-- Loop infinitely and drain your entire API budget in minutes ($$$)
-- Hang forever waiting for slow APIs (terrible UX)
-- Execute unauthorized actions (security breach)
-- Fail silently without logs (impossible to debug)
+Real-world context: A naive agent implementation costs $2,000/month for 10,000 requests. After optimization:
+- Smart caching: $600/month (70% reduction)
+- Model selection: $200/month (90% reduction from baseline)
+- Batching: $120/month (94% reduction)
 
-This lab teaches you the **production patterns** that separate toy demos from reliable systems. Every production agent at OpenAI, Anthropic, and Google includes these safeguards.
-
-**Key insight from Week 8 lecture:** Agents cost 5-20x more than simple functions. Without proper controls, you're one bug away from a $10,000 surprise bill.
-
----
+This lab teaches you patterns that separate hobbyist projects from production systems.
 
 ## Pre-Lab Preparation (Do Before Class)
 
 **Required (30 minutes):**
 
-1. **Review Week 8 Lecture Materials**
-   - Slides 3-11: Agent patterns and orchestration
-   - Slides 12-18: Failure handling and safety policies
-   - Slide 26: Cost optimization strategies
+1. **Review your capstone's current API usage**
+   - Identify all LLM API calls in your code
+   - Note which calls repeat similar requests
+   - Check if you're tracking costs currently
 
-2. **Identify Agent Opportunity in Your Capstone**
-   - Where does your app need multi-step reasoning?
-   - What tasks require tool selection and coordination?
-   - Which features would benefit from adaptive behavior?
+2. **Gather baseline metrics** (if available)
+   - Total API calls in last week
+   - Average response latency
+   - Estimated monthly cost (or calculate from API logs)
 
-3. **Install Dependencies**
+3. **Install required packages**
    ```bash
-   pip install tenacity pydantic --break-system-packages
+   pip install cachetools redis python-dotenv --break-system-packages
    ```
 
 **Recommended (15 minutes):**
 
-- Review your existing function calling code from Lab 6
-- List all tools/functions your agent might need to use
-- Think about what could go wrong (timeouts, bad inputs, API failures)
-
----
+- Read [Week 10 Lecture Slides](../../lectures/week-10/) Slides 10-18 on caching and model selection
+- Review your architecture diagram from Week 4 Design Review
 
 ## In-Class Activities (2 hours)
 
-### Part 1: Agent Design Workshop (30 min)
+### Part 1: Cost Audit & Baseline (30 min)
 
-**Objective:** Define what your agent will do and which tools it needs.
+**Objective:** Understand what your capstone currently costs to run.
 
 **Tasks:**
-1. **Identify Agent Use Case** (10 min)
-   - Discuss with team: where does your capstone need an agent?
-   - Examples: research assistant, data analyst, customer support, travel planner
-   - Document the user goal your agent will achieve
+1. Map all LLM API calls in your code (15 min)
+2. Calculate baseline costs using [Cost Calculator Tool](./tools/cost-calculator.md) (10 min)
+3. Identify hotspots - which calls cost the most (5 min)
 
-2. **Design Tool Set** (15 min)
-   - List all tools your agent needs (functions from Week 6)
-   - Define clear tool descriptions (the agent uses these to choose)
-   - Specify parameters and return types
-   - Use [Agent Design Template](./templates/agent-design-template.md)
-
-3. **Map Agent Flow** (5 min)
-   - Sketch the ReAct loop: Reason → Act → Observe → Repeat
-   - Identify exit conditions (success or max iterations)
-   - Note where failures might occur
-
-**Deliverable:** Completed agent design section in implementation plan
+**Deliverable:** Completed `Current State Analysis` section in audit document
 
 **Instructor checkpoint:** Before moving to Part 2
 
 ---
 
-### Part 2: Implement ReAct Loop (40 min)
+### Part 2: Caching Opportunities (40 min)
 
-**Objective:** Build the core agent loop with proper iteration limits.
+**Objective:** Implement prompt caching for repeat queries.
 
 **Tasks:**
+1. Identify cacheable patterns in your app (10 min)
+   - Repeated system prompts
+   - Common user queries
+   - Static context (docs, guidelines)
 
-1. **Code Along: Basic ReAct Loop** (20 min)
+2. Implement in-memory caching (20 min)
+   - Use [Caching Implementation Guide](./guides/caching-implementation.md)
+   - Code walkthrough with instructor
+   - Test with sample queries
 
-Instructor will demonstrate, then you'll implement for your capstone:
+3. Measure impact (10 min)
+   - Calculate cache hit rate
+   - Project monthly savings
 
-```python
-class SimpleAgent:
-    def __init__(self, tools, max_iterations=5):
-        self.tools = tools
-        self.max_iterations = max_iterations
-    
-    def run(self, user_query):
-        messages = [
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": user_query}
-        ]
-        
-        for i in range(self.max_iterations):
-            # REASON: Ask LLM what to do next
-            response = openai.ChatCompletion.create(
-                model="gpt-4",
-                messages=messages,
-                tools=self.tools
-            )
-            
-            message = response.choices[0].message
-            
-            # Check if done (no tool calls)
-            if not message.tool_calls:
-                return message.content
-            
-            # ACT: Execute tools
-            messages.append(message)
-            for tool_call in message.tool_calls:
-                result = self._execute_tool(
-                    tool_call.function.name,
-                    tool_call.function.arguments
-                )
-                
-                # OBSERVE: Add result to conversation
-                messages.append({
-                    "role": "tool",
-                    "tool_call_id": tool_call.id,
-                    "content": result
-                })
-        
-        # Max iterations reached
-        return "I couldn't complete the task in time. Please try again."
-```
-
-**Key concepts:**
-- **max_iterations**: Prevents infinite loops (critical!)
-- **Conversation history**: Agent maintains context across steps
-- **Tool execution loop**: Agent can call multiple tools in one turn
-
-2. **Adapt to Your Capstone** (15 min)
-   - Replace tools with your actual functions
-   - Update system prompt for your use case
-   - Test with a real user query
-   - Verify it stops at max_iterations
-
-3. **Test Edge Cases** (5 min)
-   - What if tool returns error?
-   - What if LLM keeps calling same tool?
-   - What if max_iterations reached?
-
-**Deliverable:** Working ReAct loop for your capstone
+**Deliverable:** Working cache implementation + impact analysis
 
 ---
 
-### Part 3: Add Failure Handling (35 min)
+### Part 3: Model Selection Strategy (30 min)
 
-**Objective:** Implement timeouts, retries, and circuit breakers.
+**Objective:** Use cheaper models where quality allows.
 
 **Tasks:**
+1. Categorize your use cases by complexity (10 min)
+   - Simple: classification, extraction, formatting
+   - Medium: summarization, Q&A, basic reasoning
+   - Complex: multi-step reasoning, code generation, creative tasks
 
-1. **Add Timeouts** (10 min)
+2. Map models to use cases (10 min)
+   - Use [Model Selection Matrix](./guides/model-selection.md)
+   - Identify opportunities to downgrade models
+   - Plan A/B tests for uncertain cases
 
-Every API call and tool execution needs a timeout:
+3. Calculate projected savings (10 min)
+   - Use cost calculator with new model mix
+   - Document decision rationale
 
-```python
-import requests
-from tenacity import retry, stop_after_attempt, wait_exponential
-
-def execute_tool_with_timeout(tool_name, args, timeout=5):
-    """Execute tool with timeout."""
-    try:
-        # For API calls
-        if tool_name == "web_search":
-            response = requests.get(
-                f"https://api.example.com/search",
-                params=args,
-                timeout=timeout
-            )
-            return response.json()
-        
-        # For LLM calls
-        elif tool_name == "summarize":
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=[{"role": "user", "content": args["text"]}],
-                timeout=timeout
-            )
-            return response.choices[0].message.content
-            
-    except requests.Timeout:
-        return {"error": "Request timed out"}
-    except Exception as e:
-        return {"error": str(e)}
-```
-
-**Add timeouts to:**
-- LLM API calls (10-30 seconds)
-- External API calls (2-5 seconds)
-- Database queries (1-3 seconds)
-- File operations (5 seconds)
-
-2. **Implement Retry Logic** (15 min)
-
-Use exponential backoff with jitter (from Week 8 Slide 11):
-
-```python
-from tenacity import (
-    retry,
-    stop_after_attempt,
-    wait_exponential,
-    retry_if_exception_type
-)
-import random
-
-@retry(
-    stop=stop_after_attempt(3),
-    wait=wait_exponential(multiplier=1, min=1, max=10),
-    retry=retry_if_exception_type((requests.Timeout, requests.ConnectionError))
-)
-def call_api_with_retry(url, params):
-    """Call API with exponential backoff retry."""
-    # Add jitter to prevent thundering herd
-    jitter = random.uniform(0, 0.5)
-    time.sleep(jitter)
-    
-    response = requests.get(url, params=params, timeout=5)
-    response.raise_for_status()
-    return response.json()
-```
-
-**Configure retry for:**
-- Transient failures (network blips, rate limits)
-- Exponential backoff: 1s → 2s → 4s
-- Jittered backoff to prevent synchronized retries
-- Do NOT retry on 4xx client errors (bad request, unauthorized)
-
-3. **Implement Circuit Breaker** (10 min)
-
-Stop calling broken services (Week 8 Slide 13):
-
-```python
-class CircuitBreaker:
-    def __init__(self, failure_threshold=5, timeout=60):
-        self.failure_count = 0
-        self.failure_threshold = failure_threshold
-        self.timeout = timeout
-        self.last_failure_time = None
-        self.state = "CLOSED"  # CLOSED, OPEN, HALF_OPEN
-    
-    def call(self, func, *args, **kwargs):
-        # OPEN: Service is broken, fail fast
-        if self.state == "OPEN":
-            if time.time() - self.last_failure_time > self.timeout:
-                self.state = "HALF_OPEN"
-            else:
-                raise Exception("Circuit breaker is OPEN")
-        
-        try:
-            result = func(*args, **kwargs)
-            
-            # Success: Reset if we were testing (HALF_OPEN)
-            if self.state == "HALF_OPEN":
-                self.state = "CLOSED"
-                self.failure_count = 0
-            
-            return result
-            
-        except Exception as e:
-            self.failure_count += 1
-            self.last_failure_time = time.time()
-            
-            # Too many failures: Open circuit
-            if self.failure_count >= self.failure_threshold:
-                self.state = "OPEN"
-            
-            raise e
-```
-
-**Apply circuit breakers to:**
-- External APIs that might go down
-- Database connections
-- Third-party services
-
-**Deliverable:** Agent with timeouts, retries, and circuit breaker
-
-**Instructor checkpoint:** Verify failure handling works
+**Deliverable:** Completed model selection strategy in audit
 
 ---
 
-### Part 4: Add Safety & Logging (15 min)
+### Part 4: Implementation Planning (20 min)
 
-**Objective:** Implement authorization, validation, and audit logs.
+**Objective:** Create concrete action plan for homework.
 
 **Tasks:**
+1. Prioritize optimization opportunities (10 min)
+   - Impact vs. effort matrix
+   - Select top 3 for homework implementation
+   - Assign to team members
 
-1. **Add Authorization Checks** (5 min)
+2. Define success metrics (10 min)
+   - Baseline vs. target costs
+   - Acceptable latency ranges
+   - Quality evaluation criteria
 
-```python
-def authorize_tool_call(user_id, tool_name):
-    """Check if user is allowed to call this tool."""
-    
-    # Define permissions
-    permissions = {
-        "read": ["search", "get_info", "summarize"],
-        "write": ["update", "delete", "send_email"],
-        "admin": ["delete_all", "system_config"]
-    }
-    
-    user_role = get_user_role(user_id)  # Your auth system
-    
-    # Check if tool requires restricted permission
-    for role, allowed_tools in permissions.items():
-        if tool_name in allowed_tools:
-            if user_role != role and role != "read":
-                raise PermissionError(
-                    f"User {user_id} not authorized for {tool_name}"
-                )
-    
-    return True
-```
+**Deliverable:** Implementation plan section completed
 
-2. **Add Input Validation** (5 min)
-
-Use Pydantic for schema validation:
-
-```python
-from pydantic import BaseModel, validator
-
-class SearchInput(BaseModel):
-    query: str
-    max_results: int = 10
-    
-    @validator('query')
-    def query_not_empty(cls, v):
-        if not v or len(v.strip()) == 0:
-            raise ValueError('Query cannot be empty')
-        return v
-    
-    @validator('max_results')
-    def max_results_in_range(cls, v):
-        if v < 1 or v > 100:
-            raise ValueError('max_results must be between 1 and 100')
-        return v
-
-# Use in tool execution
-def search_tool(args):
-    validated = SearchInput(**args)  # Raises error if invalid
-    return perform_search(validated.query, validated.max_results)
-```
-
-3. **Implement Audit Logging** (5 min)
-
-Log everything (Week 8 Slide 17):
-
-```python
-import logging
-import json
-from datetime import datetime
-
-# Configure logger
-logging.basicConfig(
-    filename='agent_audit.log',
-    level=logging.INFO,
-    format='%(asctime)s - %(message)s'
-)
-
-def log_agent_action(
-    user_id,
-    agent_step,
-    tool_name,
-    tool_args,
-    tool_result,
-    cost_usd,
-    latency_ms
-):
-    """Log every agent action for audit trail."""
-    
-    log_entry = {
-        "timestamp": datetime.utcnow().isoformat(),
-        "user_id": user_id,
-        "agent_step": agent_step,
-        "tool_name": tool_name,
-        "tool_args": tool_args,
-        "tool_result": str(tool_result)[:200],  # Truncate
-        "cost_usd": cost_usd,
-        "latency_ms": latency_ms,
-        "success": "error" not in str(tool_result).lower()
-    }
-    
-    logging.info(json.dumps(log_entry))
-```
-
-**What to log:**
-- User query and user ID
-- Every tool call with arguments
-- Tool results (truncated if large)
-- Errors and exceptions
-- Cost and latency per step
-- Final response to user
-
-**What NOT to log:**
-- Passwords or API keys
-- Credit card numbers
-- Personal health information
-- Full user data (only IDs)
-
-**Deliverable:** Agent with authorization, validation, and logging
-
----
+**Final instructor checkpoint:** Review plan before leaving lab
 
 ## Homework Assignment
 
 ### Core Deliverables (Required)
 
-#### 1. Production-Ready Agent Implementation
+**1. Implement Top 3 Optimizations**
 
-Implement a complete agent in your capstone with all safety features:
+Execute your implementation plan from lab. Common optimizations:
 
-**Required Components:**
+- **Caching Implementation**
+  - Add prompt caching for repeated requests
+  - Implement response caching with TTL
+  - Document cache invalidation strategy
+
+- **Model Selection**
+  - Replace expensive models for simple tasks
+  - Add fallback logic (cheap model first, expensive if needed)
+  - A/B test to validate quality is maintained
+
+- **Batching** (if applicable)
+  - Batch similar requests together
+  - Implement async processing for non-urgent tasks
+  - Add job queue for batch operations
+
+**Where to put it:** Update your existing capstone code
+
+**2. Cost Tracking Instrumentation**
+
+Add logging to track optimization impact:
 
 ```python
-class ProductionAgent:
-    """
-    Production-ready agent with full safety features.
-    """
-    
-    def __init__(
-        self,
-        tools,
-        max_iterations=5,
-        timeout_per_tool=5,
-        cost_limit_usd=1.0
-    ):
-        self.tools = tools
-        self.max_iterations = max_iterations
-        self.timeout_per_tool = timeout_per_tool
-        self.cost_limit_usd = cost_limit_usd
-        self.total_cost = 0
-        self.circuit_breakers = {}  # Per-tool circuit breakers
-        self.logger = self._setup_logger()
-    
-    def run(self, user_id, user_query):
-        """
-        Execute agent with all safety features.
-        
-        Returns:
-            dict: {
-                "success": bool,
-                "result": str,
-                "cost_usd": float,
-                "steps_taken": int,
-                "errors": list
-            }
-        """
-        # Implementation with all features from lab
-        pass
-    
-    def _execute_tool_safely(self, user_id, tool_name, args):
-        """Execute tool with authorization, timeout, retry, logging."""
-        pass
-    
-    def _check_cost_limit(self):
-        """Prevent runaway costs."""
-        if self.total_cost >= self.cost_limit_usd:
-            raise Exception(f"Cost limit ${self.cost_limit_usd} exceeded")
-    
-    def _setup_logger(self):
-        """Configure audit logging."""
-        pass
-```
-
-**Must Include:**
-- [ ] ReAct loop with `max_iterations` (prevent infinite loops)
-- [ ] Timeouts on ALL API calls and tool executions
-- [ ] Retry logic with exponential backoff + jitter
-- [ ] Circuit breakers for external services
-- [ ] Authorization checks before tool execution
-- [ ] Input validation with Pydantic schemas
-- [ ] Comprehensive audit logging (JSON format)
-- [ ] Cost tracking with hard limits
-- [ ] Graceful degradation on failures
-- [ ] Structured error responses
-
-**Where to put it:** `src/agent/production_agent.py` or similar
-
----
-
-#### 2. Agent Safety Documentation
-
-Create `docs/agent-safety.md` with:
-
-**Required Sections:**
-
-**Tool Authorization Matrix**
-
-| Tool Name | Required Permission | Justification |
-|-----------|---------------------|---------------|
-| search_web | read | Public data access |
-| send_email | write | Modifies external state |
-| delete_user | admin | Destructive action |
-
-**Failure Scenarios & Handling**
-
-Document at least 5 failure scenarios:
-
-1. **Scenario:** API timeout
-   - **Detection:** Timeout exception after 5s
-   - **Handling:** Retry with exponential backoff (3 attempts)
-   - **User Impact:** 10-15s delay, graceful error message
-   - **Fallback:** Return cached result if available
-
-2. **Scenario:** Infinite loop (agent keeps calling same tool)
-   - **Detection:** max_iterations reached
-   - **Handling:** Stop execution, return partial result
-   - **User Impact:** "I couldn't complete the task" message
-   - **Fallback:** Suggest user refine query
-
-[...document 3 more scenarios...]
-
-**Cost Controls**
-
-- Per-request limit: $X
-- Per-user daily limit: $Y
-- Global monthly limit: $Z
-- Alert thresholds: 80% of limits
-- What happens when limit reached: [describe]
-
-**Audit Log Schema**
-
-```json
+# Example structure
 {
   "timestamp": "2025-01-15T10:30:00Z",
-  "user_id": "user_123",
-  "session_id": "session_456",
-  "agent_step": 3,
-  "tool_name": "search_web",
-  "tool_args": {"query": "AI safety"},
-  "tool_result_summary": "Found 10 results",
-  "cost_usd": 0.002,
+  "endpoint": "/api/analyze",
+  "model": "gpt-3.5-turbo",
+  "tokens_input": 150,
+  "tokens_output": 75,
+  "cost_usd": 0.0004,
   "latency_ms": 850,
-  "success": true,
-  "error": null
+  "cache_hit": false
 }
 ```
 
-**Security Considerations**
+**Where to put it:** `src/utils/cost_tracking.py` or similar
 
-- How you prevent prompt injection
-- How you sanitize tool inputs
-- How you protect sensitive data in logs
-- How you enforce authorization
+**3. Results Documentation**
 
----
+Create `docs/optimization-results.md` with:
 
-#### 3. Agent Testing Suite
+- Before/after metrics (cost, latency, quality)
+- Implementation details and challenges
+- Screenshots or data visualizations
+- Lessons learned and future optimizations
 
-Create `tests/test_agent_safety.py` with unit tests:
+**4. Update Project README**
 
-```python
-import pytest
-from src.agent.production_agent import ProductionAgent
-
-def test_max_iterations_prevents_infinite_loop():
-    """Agent stops after max_iterations."""
-    agent = ProductionAgent(tools=[], max_iterations=3)
-    
-    # Mock LLM that always wants to call tools
-    result = agent.run("user_1", "infinite query")
-    
-    assert result["steps_taken"] <= 3
-    assert "couldn't complete" in result["result"].lower()
-
-def test_timeout_on_slow_tool():
-    """Tool execution times out after limit."""
-    # Test that slow tools are killed after timeout
-    pass
-
-def test_retry_on_transient_failure():
-    """Transient failures trigger retry."""
-    # Test that network errors retry 3 times
-    pass
-
-def test_circuit_breaker_opens_after_failures():
-    """Circuit breaker stops calling broken service."""
-    # Test that after 5 failures, circuit opens
-    pass
-
-def test_unauthorized_tool_call_blocked():
-    """Users can't call unauthorized tools."""
-    # Test that read-only user can't call delete tool
-    pass
-
-def test_cost_limit_enforced():
-    """Agent stops when cost limit reached."""
-    agent = ProductionAgent(tools=[], cost_limit_usd=0.10)
-    
-    # Simulate expensive operations
-    # Assert agent stops before exceeding limit
-    pass
-
-def test_audit_log_created():
-    """All agent actions are logged."""
-    # Test that log file contains expected entries
-    pass
-```
-
-**Minimum 7 tests:**
-1. Max iterations prevents infinite loop
-2. Timeouts work on slow tools
-3. Retry logic handles transient failures
-4. Circuit breaker opens after repeated failures
-5. Authorization blocks unauthorized tools
-6. Cost limit stops execution
-7. Audit logs are created
-
-**Where to put it:** `tests/test_agent_safety.py`
-
----
-
-#### 4. Update Project README
-
-Add "Agent Architecture" section to your main README.md:
-
-```markdown
-## Agent Architecture
-
-### Overview
-Our application uses a production-ready ReAct agent to [describe what your agent does].
-
-### Agent Flow
-1. **Reason**: LLM analyzes user query and decides which tool to use
-2. **Act**: Agent executes tool with safety checks
-3. **Observe**: Agent examines tool result
-4. **Repeat**: Continue until goal achieved or max iterations
-
-### Available Tools
-- `search_docs`: Search internal documentation
-- `analyze_data`: Process and analyze datasets
-- `generate_report`: Create formatted reports
-
-### Safety Features
-- ✅ Max 5 iterations to prevent infinite loops
-- ✅ 5-second timeout on all tool executions
-- ✅ Exponential backoff retry on transient failures
-- ✅ Circuit breakers on external APIs
-- ✅ Authorization checks (read/write/admin roles)
-- ✅ Input validation with Pydantic
-- ✅ Comprehensive audit logging
-- ✅ $1 per-request cost limit
-
-### Monitoring
-- Audit logs: `logs/agent_audit.log`
-- Error tracking: Check logs for `"success": false`
-- Cost dashboard: [link if you built one]
-
-### Known Limitations
-- Agent may not complete complex multi-step tasks in 5 iterations
-- External API timeouts can cause delays
-- Circuit breaker may block requests for 60s after failures
-```
-
----
+Add "Performance" section showcasing:
+- Current costs per 1K requests
+- Average response times
+- Optimization strategies employed
+- Links to detailed optimization docs
 
 ## Detailed Requirements
 
-### Code Quality Standards
+### Optimization Audit (`docs/optimization-audit.md`)
 
-**Agent Implementation:**
-- [ ] Type hints on all functions
-- [ ] Docstrings with parameter and return descriptions
-- [ ] Error handling on every external call
-- [ ] No hardcoded values (use config file)
-- [ ] Graceful degradation (never crash, always respond)
+Must include:
 
-**Testing:**
-- [ ] All tests pass
-- [ ] Tests cover failure scenarios (not just happy path)
-- [ ] Mock external APIs (don't make real calls in tests)
-- [ ] Tests run in under 10 seconds total
+**Current State Analysis**
+- API call inventory (which endpoints, which models)
+- Baseline cost calculation (monthly projection)
+- Latency measurements (p50, p95, p99 if available)
+- Current cache status (none, basic, sophisticated)
 
-**Documentation:**
-- [ ] Clear English (no AI jargon without explanation)
-- [ ] Concrete examples for each failure scenario
-- [ ] Screenshots or logs where helpful
-- [ ] Honest about limitations
+**Optimization Opportunities**
+- Minimum 5 identified opportunities
+- Each with: description, projected savings, effort estimate, implementation notes
+- Prioritization with justification
 
----
+**Implementation Plan**
+- Top 3 selected optimizations
+- Team member assignments
+- Timeline (specific dates)
+- Success criteria (measurable metrics)
+- Risk mitigation strategies
 
-### Grading Rubric
+**Cost Calculator**
+- Tool or spreadsheet that calculates costs
+- Shows current state and projected optimized state
+- Includes: model prices, token counts, request volumes
+- Link to calculator file or screenshot of results
 
-**Implementation Quality (40%)**
-- Outstanding (90-100%): All 10 safety features implemented, tested, working perfectly
-- Good (80-89%): 8-9 features implemented, minor bugs
-- Acceptable (70-79%): 6-7 features implemented, some issues
-- Needs Improvement (<70%): <6 features or major bugs
+### Optimization Results (`docs/optimization-results.md`)
 
-**Safety & Reliability (30%)**
-- Outstanding: Handles all failure scenarios gracefully, never crashes, comprehensive logging
-- Good: Handles most failures, occasional issues, adequate logging
-- Acceptable: Basic error handling, some failures not handled
-- Needs Improvement: Poor error handling, crashes on failures
+Must include:
 
-**Documentation (20%)**
-- Outstanding: Thorough safety doc, all failure scenarios documented, clear testing strategy
-- Good: Good documentation, most scenarios covered
-- Acceptable: Basic documentation, some gaps
-- Needs Improvement: Minimal or unclear documentation
+**Metrics Comparison**
+- Table showing before/after for each optimization
+- Cost reduction percentages
+- Latency impact (improvement or degradation)
+- Quality assessment (if applicable)
 
-**Testing (10%)**
-- Outstanding: 7+ tests, all passing, covers edge cases
-- Good: 5-6 tests, all passing
-- Acceptable: 3-4 tests, mostly passing
-- Needs Improvement: <3 tests or tests failing
+**Implementation Details**
+- Code changes made (with file references)
+- Dependencies added
+- Configuration changes
+- Deployment considerations
 
-**Bonus Points:**
-- Monitoring dashboard for agent actions (+5%)
-- Load testing with concurrent users (+5%)
-- Novel safety feature specific to your use case (+10%)
-- Demonstration of agent preventing actual security issue (+10%)
+**Challenges & Solutions**
+- Problems encountered during implementation
+- How they were resolved
+- Workarounds or compromises made
 
----
+**Future Work**
+- Additional optimizations identified but not implemented
+- Monitoring and alerting plans
+- Scale testing plans
+
+## Grading Criteria
+
+This lab is part of your ongoing capstone development. Quality is assessed on:
+
+**Optimization Audit (In-Lab) - Completeness Check**
+- ✓ Current state thoroughly analyzed
+- ✓ At least 5 opportunities identified with impact estimates
+- ✓ Top 3 selected with clear justification
+- ✓ Cost calculator functional and realistic
+
+**Implementation (Homework) - Quality Assessment**
+- **Impact (40%)**: Measurable cost or latency improvements
+- **Quality (30%)**: Implementation follows best practices, code quality maintained
+- **Documentation (20%)**: Clear explanation of changes and results
+- **Instrumentation (10%)**: Cost tracking properly implemented
+
+**Exceptional Work Indicators:**
+- 70%+ cost reduction with maintained quality
+- Novel optimization approach for your specific use case
+- Production-grade monitoring dashboard
+- Detailed A/B test results validating model downgrades
 
 ## Common Pitfalls to Avoid
 
-### ❌ "Agents are just fancy functions"
-No! Agents reason, adapt, and coordinate tools. If you're not using multi-step reasoning, you don't need an agent.
+### "We'll optimize later"
+This IS later. Optimization is easiest to implement mid-project, not at the end when everything is hardcoded.
 
-### ❌ "I'll add safety features later"
-Safety must be built in from the start. Retrofitting is painful and error-prone.
+### "Caching is too complex"
+Start simple - even in-memory caching with Python `dict` saves money. You can upgrade to Redis later.
 
-### ❌ "My agent won't loop infinitely"
-Yes it will. Eventually. Always set max_iterations.
+### "Our costs are already low"
+It's not just about current costs - it's about learning production patterns before you scale. $10/month becomes $1,000/month at 100x traffic.
 
-### ❌ "I don't need timeouts for fast APIs"
-All APIs are fast until they're not. Networks fail. Services go down. Always timeout.
+### "We can't measure the impact"
+If you don't have baseline metrics, start collecting them TODAY. Even rough estimates are better than nothing.
 
-### ❌ "I'll just catch Exception and retry"
-Don't retry 4xx client errors (bad request, unauthorized). Only retry transient 5xx/network errors.
-
-### ❌ "Logging is just for debugging"
-Audit logs are for security, compliance, and analytics too. Log everything (except secrets).
-
-### ❌ "Cost limits are overkill for my app"
-One bug, one infinite loop = $10,000 bill. Always set limits.
-
-### ❌ "My authorization checks are in the prompt"
-NEVER trust the agent. Enforce permissions at the system level, not in prompts.
-
----
+### "Quality might suffer"
+That's why you test! Use your evaluation suite from Week 11. Set quality thresholds. Rollback if metrics degrade.
 
 ## FAQ
 
-### Q: Do we need an agent for our capstone?
+### Q: Our capstone doesn't have high API usage yet. Should we still optimize?
 
-A: If your app needs multi-step reasoning or adaptive behavior, yes. If it's simple input→function→output, no. Agents are for complex tasks where the path isn't predetermined.
+A: Yes! This lab teaches patterns you'll need in production. Implement them now while the codebase is manageable. Plus, it demonstrates professional engineering in your final demo.
 
-### Q: Can we use LangChain or other frameworks?
+### Q: Can we use third-party caching libraries like LangChain's cache?
 
-A: Yes, but you must still implement all safety features. Framework defaults often lack production safeguards. Document which features the framework provides vs. what you added.
+A: Absolutely, but understand what they're doing under the hood. For your audit, document which library you're using and why.
 
-### Q: What if our agent legitimately needs >5 iterations?
+### Q: What if optimization makes our code more complex?
 
-A: Increase max_iterations with justification. Document why. Consider if the task is too complex and should be broken down.
+A: Good observation. Balance is key. Document the complexity trade-off. Sometimes a 20% cost savings isn't worth 50% more code complexity. Make the trade-off explicit and justify your decision.
 
-### Q: How do we test timeout logic without waiting 5 seconds?
+### Q: We're using an agent framework (LangChain, CrewAI). Can we still optimize?
 
-A: Mock slow functions to return immediately but simulate timeout behavior. Use `pytest`'s mock features.
+A: Yes, but it's harder. Focus on: (1) Caching at the framework level if supported, (2) Model selection within framework config, (3) Monitoring framework costs. Document the limitations of optimization within your framework choice.
 
-### Q: Should we implement ALL the safety features even if our agent is simple?
+### Q: How do we handle cache invalidation?
 
-A: Yes. This lab teaches production patterns. Even simple agents need timeouts, logging, and cost limits. Consider it training for your career.
+A: Simple approach: Time-based TTL (time-to-live). Set cache entries to expire after N hours/days. Advanced: Event-based invalidation when underlying data changes. For this lab, TTL is sufficient.
 
-### Q: What if our agent doesn't use external APIs?
+### Q: What's a realistic cost reduction target?
 
-A: It still uses LLM APIs. Those need timeouts, retries, and cost tracking. If you have no tools at all, you don't have an agent.
+A: Depends on your starting point:
+- No caching → Adding cache: 40-80% reduction
+- All GPT-4 → Mixed models: 60-90% reduction  
+- No batching → Adding batches: 20-40% reduction
 
-### Q: Can we use Redis/database for circuit breaker state?
-
-A: Yes, that's more production-ready than in-memory. Document the decision. For this lab, in-memory is acceptable.
-
-### Q: How much should we log?
-
-A: Every agent step, every tool call, every error. Logs are cheap, debugging without them is expensive.
-
----
+If you achieve 50% total reduction, that's excellent work.
 
 ## Resources
 
 **In This Lab Folder:**
-- [Agent Design Template](./templates/agent-design-template.md)
-- [Tool Schema Template](./templates/tool-schema-template.md)
-- [Safety Checklist](./templates/safety-checklist.md)
-- [ReAct Loop Guide](./guides/react-loop-guide.md)
-- [Timeout & Retry Guide](./guides/timeout-retry-guide.md)
-- [Authorization Patterns](./guides/authorization-guide.md)
-- [Audit Logging Best Practices](./guides/audit-logging-guide.md)
-- [Cost Tracking Guide](./guides/cost-tracking-guide.md)
+- [Cost Calculator Tool](./tools/cost-calculator.md)
+- [Caching Implementation Guide](./guides/caching-implementation.md)
+- [Model Selection Matrix](./guides/model-selection.md)
+- [Batching Patterns](./guides/batching-patterns.md)
+- [Cost Tracking Template](./templates/cost-tracking-template.py)
 
 **External Resources:**
-- Week 8 Lecture Slides (especially Slides 3-18, 26)
-- Tenacity library docs: https://tenacity.readthedocs.io/
-- Pydantic validation: https://docs.pydantic.dev/
-- OpenAI function calling: https://platform.openai.com/docs/guides/function-calling
-- AWS Circuit Breaker pattern: https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/
+- OpenAI Pricing: https://openai.com/pricing
+- Anthropic Pricing: https://www.anthropic.com/pricing
+- Google AI Pricing: https://ai.google.dev/pricing
+- Week 10 Lecture Materials: ../../lectures/week-10/
 
----
+**Related Course Materials:**
+- Week 4 Design Review (architecture context)
+- Week 11 Evaluation (quality metrics)
+- Week 12 Production Engineering (deployment patterns)
 
 ## Checklist: Ready to Submit?
 
-**Agent Implementation:**
-- [ ] ReAct loop implemented with max_iterations
-- [ ] Timeouts on all external calls
-- [ ] Retry logic with exponential backoff + jitter
-- [ ] Circuit breakers on flaky services
-- [ ] Authorization checks enforced
-- [ ] Input validation with Pydantic
-- [ ] Audit logging to file/database
-- [ ] Cost tracking with hard limits
-- [ ] Graceful error handling (never crashes)
-- [ ] Code is tested and working
+**In-Lab Audit Document:**
+- [ ] `docs/optimization-audit.md` exists in your repo
+- [ ] Current state section complete with baseline metrics
+- [ ] At least 5 optimization opportunities identified
+- [ ] Top 3 selected with implementation plan
+- [ ] Cost calculator included or linked
+- [ ] Team member assignments clear
+- [ ] Success metrics defined
 
-**Documentation:**
-- [ ] `docs/agent-safety.md` complete
-- [ ] Tool authorization matrix filled out
-- [ ] 5+ failure scenarios documented
-- [ ] Cost controls specified
-- [ ] Audit log schema defined
-- [ ] README updated with agent architecture
-
-**Testing:**
-- [ ] `tests/test_agent_safety.py` created
-- [ ] 7+ tests written
-- [ ] All tests passing
-- [ ] Tests cover failure scenarios
+**Homework Implementation:**
+- [ ] Top 3 optimizations implemented and tested
+- [ ] Cost tracking code added
+- [ ] `docs/optimization-results.md` complete
+- [ ] Before/after metrics documented
+- [ ] Quality validation performed (no regressions)
+- [ ] README updated with performance section
+- [ ] Code committed to GitHub with clear commit messages
 
 **Quality Checks:**
-- [ ] No API keys in code
-- [ ] No secrets in logs
-- [ ] Type hints on all functions
-- [ ] Docstrings on classes and methods
-- [ ] Code is readable and well-organized
-
----
+- [ ] No API keys in code (use .env)
+- [ ] Cache invalidation strategy documented
+- [ ] Model selection rationale explained
+- [ ] Actual cost savings measured (not just projected)
+- [ ] Latency impact assessed
+- [ ] Team reviewed together
 
 ## What's Next?
 
-**Week 11: Evaluation & Observability**
-- You'll use your audit logs to analyze agent performance
-- Evaluation frameworks will measure agent success rates
-- Observability patterns will help you monitor production agents
+**Week 11: Evaluation & Safety Audit**
+- You'll need your optimization metrics for the safety audit
+- Evaluation frameworks will measure if optimizations hurt quality
+- Golden datasets will validate model selection choices
 
 **Week 12: Production Engineering**
-- Your agent will be deployed with CI/CD
-- Monitoring dashboards will track agent metrics
-- Production secrets management will secure your tools
+- Optimizations prepare you for CI/CD deployment
+- Monitoring systems will track ongoing cost performance
+- Production secrets management builds on .env patterns
 
 **Week 15: Final Demo**
-- Your production-ready agent is a major demo feature
-- "Built an agent with 99.9% reliability" is impressive
-- Safety features demonstrate professional engineering
+- Optimization results are a key demo talking point
+- "We reduced costs 80% while maintaining quality" is impressive
+- Performance metrics belong in your case study
 
-Remember: The patterns you learn here—timeouts, retries, circuit breakers, authorization, audit logging—apply to ANY distributed system, not just AI agents. These are fundamental software engineering skills.
+Remember: Production optimization isn't just about saving money - it's about professional engineering discipline. The patterns you learn here apply to any resource-constrained system.
 
-Good luck building your production agent!
+Good luck!
