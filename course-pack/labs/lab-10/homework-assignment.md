@@ -1,7 +1,6 @@
 # Lab 10 Homework Assignment
 
-**Due:** End of Week 11  
-**Total Points:** 3 points (Safety & Evaluation Audit) + 1.5 points (Lab Participation)  
+**Due:** Thursday December 18th, 2025 23:59 
 **Estimated Time:** 9-13 hours  
 **Submission:** GitHub repository + `docs/safety-evaluation-audit.md`
 
