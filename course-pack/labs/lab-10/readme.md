@@ -270,10 +270,9 @@ This is your Week 11 capstone milestone. Create `docs/safety-evaluation-audit.md
 
 **This week contributes to two grading components:**
 
-### 1. Participation & Lab Work (ongoing, total 15 points)
+### 1. Participation & Lab Work (ongoing, total 15 points, inclusive of peer review)
 
-**Lab 10 Participation (1.5 points):**
-- Attended lab and participated in activities
+**Lab 10 Participation 2 points:**
 - Completed in-lab deliverables:
   * Initial golden set (15-20 queries)
   * Baseline metrics calculated
