@@ -8,8 +8,8 @@ This condensed guide gives you the essentials for Week 11's Evaluation & Observa
 
 ## TL;DR - What You Need to Do This Week
 
-**Due:** Safety & Evaluation Audit (3 points) - End of Week 11  
-**Time:** ~13 hours total
+**Due:** Safety & Evaluation Audit - Thursday December 18th, 2025 23:59
+
 
 ### 4 Critical Tasks:
 
