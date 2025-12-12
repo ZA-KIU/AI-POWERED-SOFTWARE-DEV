@@ -692,24 +692,6 @@ See guides/ui-ux-quick-wins.md for details.
 
 ---
 
-## Grading Rubric Summary
-
-See `grading-rubric.md` for complete rubric.
-
-**Lab Participation (1.5 points):**
-- Attended lab
-- Completed in-lab activities
-- Contributed to team discussions
-
-**Safety & Evaluation Audit (3 points):**
-- Red team results: 0.6 pts
-- Bias & privacy checks: 0.6 pts
-- Golden set & regression tests: 0.9 pts
-- Error taxonomy: 0.3 pts
-- Telemetry plan: 0.6 pts
-
----
-
 ## Submission Checklist
 
 **Before submitting:**
@@ -727,7 +709,7 @@ See `grading-rubric.md` for complete rubric.
 2. Submit audit document: `docs/safety-evaluation-audit.md`
 3. Include link to your GitHub repo in submission
 
-**Deadline:** End of Week 11 (check course calendar for exact date/time)
+**Deadline:** Thursday December 18th, 2025 23:59
 
 ---
 
@@ -771,8 +753,6 @@ A: If your lab partner could use your app without confusion, you're good. Focus 
 ## Getting Help
 
 **During homework:**
-- Office hours: [Schedule TBD]
-- Discussion forum: Post questions publicly
 - Email: zeshan.ahmad@kiu.edu.ge (for sensitive issues)
 
 **For technical issues:**
@@ -780,10 +760,6 @@ A: If your lab partner could use your app without confusion, you're good. Focus 
 - Ask teammates for help
 - Search course materials from previous weeks
 
-**For grading questions:**
-- Review `grading-rubric.md` carefully
-- Ask in office hours if unclear
-- Submit early for feedback (if time permits)
 
 ---
 
