@@ -376,23 +376,6 @@ A: No! Standard is "functional and clear." Follow the 5 quick wins.
 
 **Email:** zeshan.ahmad@kiu.edu.ge (for sensitive issues)
 
----
-
-## Time Management
-
-**Recommended schedule:**
-
-| Day | Task | Hours |
-|-----|------|-------|
-| Mon | Create golden set (30 queries) | 3 |
-| Tue | Run evaluation, calculate metrics | 2 |
-| Wed | Set up regression tests, logging | 1 |
-| Thu | Start audit (sections 1-2) | 2 |
-| Fri | Finish audit (sections 3-5) | 2 |
-| Sat | UI improvements | 3 |
-| Sun | Review, proofread, submit | 1 |
-
-**Total: ~14 hours**
 
 ---
 
@@ -410,7 +393,7 @@ A: No! Standard is "functional and clear." Follow the 5 quick wins.
 
 ## Looking Ahead
 
-**Next week (Week 12 - Lab 11):**
+**Next week (Week 13 - Lab 11):**
 - Production engineering: CI/CD, secrets management, rate limiting
 - Your golden sets will become automated quality gates
 - Final push toward production-ready capstone
